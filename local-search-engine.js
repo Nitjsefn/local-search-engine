@@ -2,9 +2,9 @@
 //fullSearch -> if false it will search for dir only directly inside of pathToLibrary, or for files directly inside of this directories
 const fs = require('fs');
 const { log } = console;
-function search(pathToLibrary, requestedFIle, wantDirectory = false, fullSearch = false)
+var listToOrder = new Array();
+function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, suffix = '', fullSearch = false)
 {
-    let listToOrder = new Array();
     if(!pathToLibrary.endsWith('/')) pathToLibrary += '/';
     if(!fullSearch)
     {
@@ -14,28 +14,67 @@ function search(pathToLibrary, requestedFIle, wantDirectory = false, fullSearch 
             for(let i = 0; i < directories.length; i++)
             {
                 let pathToDir = pathToLibrary + directories[i];
-                if(fs.lstatSync(pathToDir).isDirectory()) listToOrder.push(directories[i]);
+                if(fs.lstatSync(pathToDir).isDirectory()) listToOrder.push(pathToDir);
             }
         }
-        else
+        else //wantDirectory == false
         {
             for(let i = 0; i < directories.length; i++)
             {
                 let pathToDir = pathToLibrary + directories[i];
-                if(fs.lstatSync(pathToDir).isDirectory())
-                {
-                
-                }
-                else if(directories[i].isFile()) listToOrder.push(directories[i]);
+                if(fs.lstatSync(pathToDir).isFile()) listToOrder.push(pathToDir);
             }   
         }
     }
-    else
+    else //Fullsearch
     {
-        log("Not implemented");
+        if(wantDirectory)
+        {
+            searchForDir_recursion(pathToLibrary);
+        }
+        else //wantDirectory == false
+        {
+            searchForFiles_recursion(pathToLibrary);
+        }
     }
     return listToOrder;
 }
 
 //Code only for testing purposes
-log(search(process.argv[2], '', true));
+log(search(process.argv[2], '', false, '', true));
+
+//Functions
+function searchForDir_recursion(dir)
+{
+    let directories = fs.readdirSync(dir);
+    for(let i = 0; i < directories.length; i++)
+    {
+        let pathToDir = dir + directories[i];
+        if(fs.lstatSync(pathToDir).isDirectory())
+        {
+            listToOrder.push(pathToDir);
+            if(!pathToDir.endsWith('/')) pathToDir += '/';
+            searchForDir_recursion(pathToDir);
+        }
+    }
+    return;
+}
+
+function searchForFiles_recursion(dir)
+{
+    let directories = fs.readdirSync(dir);
+    for(let i = 0; i < directories.length; i++)
+    {
+        let pathToDir = dir + directories[i];
+        if(fs.lstatSync(pathToDir).isFile())
+        {
+            listToOrder.push(pathToDir);
+        }
+        else if(fs.lstatSync(pathToDir).isDirectory())
+        {
+            if(!pathToDir.endsWith('/')) pathToDir += '/';
+            searchForFiles_recursion(pathToDir);
+        }
+    }
+    return;
+}
