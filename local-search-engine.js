@@ -37,6 +37,15 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
             searchForFiles_recursion(pathToLibrary);
         }
     }
+    //Sorting algorithm below
+    let OrderedList = listToOrder;
+    for(let i = 0; i<listToOrder.length; i++)
+    {
+        let d = listToOrder[i].length -1;
+        while(listToOrder[i][d] !== '/') d--;
+        d++;
+        listToOrder[i] = listToOrder[i].slice(d);
+    }
     return listToOrder;
 }
 
