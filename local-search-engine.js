@@ -3,6 +3,7 @@
 const fs = require('fs');
 const { log } = console;
 var listToOrder = new Array();
+var firstMovableIndex = 0;
 function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, suffix = '', fullSearch = false)
 {
     if(!pathToLibrary.endsWith('/')) pathToLibrary += '/';
@@ -38,14 +39,30 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
         }
     }
     //Sorting algorithm below
-    let OrderedList = listToOrder;
+    let orderedList = listToOrder;
     for(let i = 0; i<listToOrder.length; i++)
     {
         let d = listToOrder[i].length -1;
         while(listToOrder[i][d] !== '/') d--;
         d++;
-        listToOrder[i] = listToOrder[i].slice(d);
+        listToOrder[i] = listToOrder[i].slice(d).toLowerCase();
     }
+    requestedFIle = requestedFIle.toLowerCase();
+    //Checking if there is file with name the same as reqested
+    for(let i = 0; i < listToOrder.length; i++)
+    {
+        if(listToOrder[i].indexOf(requestedFIle) > 0)
+        {
+            let tmp = listToOrder[i];
+            listToOrder.splice(i, 1);
+            listToOrder.unshift(tmp);
+            tmp = orderedList[i];
+            orderedList.splice(i, 1);
+            orderedList.unshift(tmp);
+            break;
+        }
+    }
+    splittedReq = requestedFIle.split(' ');
     return listToOrder;
 }
 
