@@ -3,7 +3,7 @@
 const fs = require('fs');
 const { log } = console;
 var listToOrder = new Array();
-var firstMovableIndex = 0;
+//var firstMovableIndex = 0;
 function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, suffix = '', fullSearch = false)
 {
     if(!pathToLibrary.endsWith('/')) pathToLibrary += '/';
@@ -40,6 +40,7 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
     }
     //Sorting algorithm below
     let orderedList = listToOrder;
+    let accuracyPoints = new Array(orderedList.length).fill(0);
     for(let i = 0; i<listToOrder.length; i++)
     {
         let d = listToOrder[i].length -1;
@@ -51,23 +52,35 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
     //Checking if there is file with name the same as reqested
     for(let i = 0; i < listToOrder.length; i++)
     {
-        if(listToOrder[i].indexOf(requestedFIle) > 0)
+        if(listToOrder[i] === requestedFIle)
         {
-            let tmp = listToOrder[i];
-            listToOrder.splice(i, 1);
-            listToOrder.unshift(tmp);
-            tmp = orderedList[i];
-            orderedList.splice(i, 1);
-            orderedList.unshift(tmp);
+            accuracyPoints[i] += 100;
             break;
         }
     }
     splittedReq = requestedFIle.split(' ');
-    return listToOrder;
+    for(let i = 0; i < listToOrder.length; i++)
+    {
+        for(let i2 = 0; i2 < splittedReq.length; i2++)
+        {
+            
+            if(listToOrder[i].indexOf(splittedReq[i2]) >= 0)
+            {
+                accuracyPoints[i]++;
+            }
+        }
+    }
+    //Sorting arrays by the accuracy poins from the highest to the lowest
+    //for(let i = 0; i < listToOrder.length; i++)
+    //{
+    //}
+    return [listToOrder, accuracyPoints];
 }
 
 //Code only for testing purposes
-log(search(process.argv[2], '', false, '', true));
+let arr = search(process.argv[2], 'roku', false, '', true);
+log(arr[0]);
+log(arr[1]);
 
 //Functions
 function searchForDir_recursion(dir)
