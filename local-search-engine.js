@@ -63,7 +63,13 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
     {
         for(let i2 = 0; i2 < splittedReq.length; i2++)
         {
-            
+            if(suffix !== '')
+            {
+                if(!(listToOrder[i].endsWith(suffix)))
+                {
+                    accuracyPoints[i] = -100;
+                }
+            }
             if(listToOrder[i].indexOf(splittedReq[i2]) >= 0)
             {
                 accuracyPoints[i]++;
@@ -78,7 +84,7 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
 }
 
 //Code only for testing purposes
-let arr = search(process.argv[2], 'roku', false, '', true);
+let arr = search(process.argv[2], 'battlefield', false, '', true);
 log(arr[0]);
 log(arr[1]);
 
