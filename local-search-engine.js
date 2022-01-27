@@ -39,7 +39,7 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
         }
     }
     //Sorting algorithm below
-    let orderedList = listToOrder;
+    let orderedList = listToOrder.slice();
     let accuracyPoints = new Array(orderedList.length).fill(0);
     for(let i = 0; i<listToOrder.length; i++)
     {
@@ -77,14 +77,45 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
         }
     }
     //Sorting arrays by the accuracy poins from the highest to the lowest
-    //for(let i = 0; i < listToOrder.length; i++)
-    //{
-    //}
-    return [listToOrder, accuracyPoints];
+    let flag = true;
+    do
+    {
+    	flag = false;
+    	for(let i = 0; i < accuracyPoints.length-1; i++)
+    	{
+    		if(accuracyPoints[i] < accuracyPoints[i+1])
+	    	{
+                //Sorting accuracyPoints
+	    		let tmp = accuracyPoints[i];
+	    		accuracyPoints[i] = accuracyPoints[i+1];
+	    		accuracyPoints[i+1] = tmp;
+                //Sorting listToOrder
+                tmp = listToOrder[i];
+	    		listToOrder[i] = listToOrder[i+1];
+	    		listToOrder[i+1] = tmp;
+                //Sorting orderedList
+                tmp = orderedList[i];
+	    		orderedList[i] = orderedList[i+1];
+	    		orderedList[i+1] = tmp;
+                //Resetting flag in order to continue loop
+	    		flag = true;
+	    	}
+	    }
+    }while(flag);
+    //Removing all indexes with accuracy below or equal to 0
+    let lastAcceptableIndex = 0; //Will be bigger by 1 from actual last acceptable index, but for array.slice that's good
+    while(accuracyPoints[lastAcceptableIndex] > 0)
+    {
+        lastAcceptableIndex++;
+    }
+    accuracyPoints = accuracyPoints.slice(0, lastAcceptableIndex);
+    listToOrder = listToOrder.slice(0, lastAcceptableIndex);
+    orderedList = orderedList.slice(0, lastAcceptableIndex);
+    return [orderedList, accuracyPoints];
 }
 
 //Code only for testing purposes
-let arr = search(process.argv[2], 'battlefield', false, '', true);
+let arr = search(process.argv[2], 'test', true, '', true);
 log(arr[0]);
 log(arr[1]);
 
