@@ -111,13 +111,13 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
     accuracyPoints = accuracyPoints.slice(0, lastAcceptableIndex);
     listToOrder = listToOrder.slice(0, lastAcceptableIndex);
     orderedList = orderedList.slice(0, lastAcceptableIndex);
-    return [orderedList, accuracyPoints];
+    return orderedList;
 }
 
 //Code only for testing purposes
-let arr = search(process.argv[2], 'test', true, '', true);
-log(arr[0]);
-log(arr[1]);
+//let arr = search(process.argv[2], 'test', true, '', true);
+//log(arr[0]);
+//log(arr[1]);
 
 //Functions
 function searchForDir_recursion(dir)
@@ -154,3 +154,6 @@ function searchForFiles_recursion(dir)
     }
     return;
 }
+
+//Exporting
+module.exports.search = search;
