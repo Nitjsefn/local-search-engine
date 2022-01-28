@@ -6,6 +6,7 @@ var listToOrder = new Array();
 //var firstMovableIndex = 0;
 function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, suffix = '', fullSearch = false)
 {
+    listToOrder = [];
     if(!pathToLibrary.endsWith('/')) pathToLibrary += '/';
     if(!fullSearch)
     {
@@ -115,8 +116,10 @@ function search(pathToLibrary = '', requestedFIle = '', wantDirectory = false, s
 }
 
 //Code only for testing purposes
-//let arr = search(process.argv[2], 'test', true, '', true);
-//log(arr[0]);
+//let arr = search(process.argv[2], 'hunter', false, '.mp3', true);
+//log(arr);
+//let arr2 = search(process.argv[2], 'hunter', false, '.mp3', true);
+//log(arr2);
 //log(arr[1]);
 
 //Functions
